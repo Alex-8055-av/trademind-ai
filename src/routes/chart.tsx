@@ -59,7 +59,7 @@ function ChartPage() {
   const [timeframe, setTimeframe] = useState<Timeframe>("1h");
   const [report, setReport] = useState<TradeReport | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
-  const qc = useQueryClient();
+  
 
   const candlesFn = useServerFn(fetchCandles);
   const analyzeFn = useServerFn(analyzeSymbol);
@@ -160,8 +160,7 @@ function ChartPage() {
       </main>
       <Footer />
 
-      {/* keep qc referenced so unused-import lint stays clean if we later prefetch */}
-      <span className="hidden">{qc ? "" : ""}</span>
+
     </div>
   );
 }
