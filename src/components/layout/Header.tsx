@@ -4,12 +4,13 @@ import { Logo } from "@/components/brand/Logo";
 
 const navItems = [
   { label: "Markets", to: "/" },
-  { label: "AI Analysis", to: "/" },
+  { label: "AI Chart", to: "/chart" },
   { label: "Portfolio", to: "/" },
   { label: "Watchlist", to: "/" },
   { label: "Pricing", to: "/" },
   { label: "Education", to: "/" },
 ] as const;
+
 
 export function Header() {
   return (
