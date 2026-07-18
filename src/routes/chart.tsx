@@ -1,9 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Search, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AIChat } from "@/components/chart/AIChat";
@@ -11,10 +12,9 @@ import { AIReport } from "@/components/chart/AIReport";
 import { ImageAnalyzer } from "@/components/chart/ImageAnalyzer";
 import { PriceChart } from "@/components/chart/PriceChart";
 import { analyzeSymbol, type TradeReport } from "@/lib/ai/trade-analysis.functions";
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { getMarketDataProvider } from "@/lib/market-data";
 import type { Timeframe } from "@/lib/market-data/types";
+
 
 const TIMEFRAMES: Timeframe[] = [
   "1m","3m","5m","10m","15m","30m","45m","1h","2h","4h","1D","1W","1M",
