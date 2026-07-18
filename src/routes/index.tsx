@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, LineChart, Brain, ShieldCheck, TrendingUp, TrendingDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -39,9 +40,9 @@ function Hero() {
           noise into decisive, actionable signals — with the polish of the world's best fintech.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <button className="inline-flex items-center gap-2 rounded-full bg-emerald px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(34,197,94,0.45)]">
+          <Link to="/chart" className="inline-flex items-center gap-2 rounded-full bg-emerald px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(34,197,94,0.45)]">
             Launch TradeMind <ArrowRight className="h-4 w-4" />
-          </button>
+          </Link>
           <button className="glass-panel inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-foreground transition-all hover:bg-white/10">
             Watch Demo
           </button>
