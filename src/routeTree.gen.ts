@@ -14,6 +14,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAppRouteRouteImport } from './routes/_authenticated/app/route'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app/index'
+import { Route as AuthenticatedAppSectorsRouteImport } from './routes/_authenticated/app/sectors'
+import { Route as AuthenticatedAppScreenerRouteImport } from './routes/_authenticated/app/screener'
+import { Route as AuthenticatedAppScannerRouteImport } from './routes/_authenticated/app/scanner'
+import { Route as AuthenticatedAppOptionsRouteImport } from './routes/_authenticated/app/options'
+import { Route as AuthenticatedAppNewsRouteImport } from './routes/_authenticated/app/news'
+import { Route as AuthenticatedAppHeatmapRouteImport } from './routes/_authenticated/app/heatmap'
+import { Route as AuthenticatedAppFiiDiiRouteImport } from './routes/_authenticated/app/fii-dii'
+import { Route as AuthenticatedAppCalendarRouteImport } from './routes/_authenticated/app/calendar'
+import { Route as AuthenticatedAppBreadthRouteImport } from './routes/_authenticated/app/breadth'
 
 const ChartRoute = ChartRouteImport.update({
   id: '/chart',
@@ -39,18 +49,89 @@ const AuthenticatedAppRouteRoute = AuthenticatedAppRouteRouteImport.update({
   path: '/app',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppSectorsRoute = AuthenticatedAppSectorsRouteImport.update({
+  id: '/sectors',
+  path: '/sectors',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppScreenerRoute =
+  AuthenticatedAppScreenerRouteImport.update({
+    id: '/screener',
+    path: '/screener',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppScannerRoute = AuthenticatedAppScannerRouteImport.update({
+  id: '/scanner',
+  path: '/scanner',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppOptionsRoute = AuthenticatedAppOptionsRouteImport.update({
+  id: '/options',
+  path: '/options',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppNewsRoute = AuthenticatedAppNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppHeatmapRoute = AuthenticatedAppHeatmapRouteImport.update({
+  id: '/heatmap',
+  path: '/heatmap',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppFiiDiiRoute = AuthenticatedAppFiiDiiRouteImport.update({
+  id: '/fii-dii',
+  path: '/fii-dii',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
+const AuthenticatedAppCalendarRoute =
+  AuthenticatedAppCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
+    getParentRoute: () => AuthenticatedAppRouteRoute,
+  } as any)
+const AuthenticatedAppBreadthRoute = AuthenticatedAppBreadthRouteImport.update({
+  id: '/breadth',
+  path: '/breadth',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/chart': typeof ChartRoute
-  '/app': typeof AuthenticatedAppRouteRoute
+  '/app': typeof AuthenticatedAppRouteRouteWithChildren
+  '/app/breadth': typeof AuthenticatedAppBreadthRoute
+  '/app/calendar': typeof AuthenticatedAppCalendarRoute
+  '/app/fii-dii': typeof AuthenticatedAppFiiDiiRoute
+  '/app/heatmap': typeof AuthenticatedAppHeatmapRoute
+  '/app/news': typeof AuthenticatedAppNewsRoute
+  '/app/options': typeof AuthenticatedAppOptionsRoute
+  '/app/scanner': typeof AuthenticatedAppScannerRoute
+  '/app/screener': typeof AuthenticatedAppScreenerRoute
+  '/app/sectors': typeof AuthenticatedAppSectorsRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/chart': typeof ChartRoute
-  '/app': typeof AuthenticatedAppRouteRoute
+  '/app/breadth': typeof AuthenticatedAppBreadthRoute
+  '/app/calendar': typeof AuthenticatedAppCalendarRoute
+  '/app/fii-dii': typeof AuthenticatedAppFiiDiiRoute
+  '/app/heatmap': typeof AuthenticatedAppHeatmapRoute
+  '/app/news': typeof AuthenticatedAppNewsRoute
+  '/app/options': typeof AuthenticatedAppOptionsRoute
+  '/app/scanner': typeof AuthenticatedAppScannerRoute
+  '/app/screener': typeof AuthenticatedAppScreenerRoute
+  '/app/sectors': typeof AuthenticatedAppSectorsRoute
+  '/app': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -58,13 +139,50 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/chart': typeof ChartRoute
-  '/_authenticated/app': typeof AuthenticatedAppRouteRoute
+  '/_authenticated/app': typeof AuthenticatedAppRouteRouteWithChildren
+  '/_authenticated/app/breadth': typeof AuthenticatedAppBreadthRoute
+  '/_authenticated/app/calendar': typeof AuthenticatedAppCalendarRoute
+  '/_authenticated/app/fii-dii': typeof AuthenticatedAppFiiDiiRoute
+  '/_authenticated/app/heatmap': typeof AuthenticatedAppHeatmapRoute
+  '/_authenticated/app/news': typeof AuthenticatedAppNewsRoute
+  '/_authenticated/app/options': typeof AuthenticatedAppOptionsRoute
+  '/_authenticated/app/scanner': typeof AuthenticatedAppScannerRoute
+  '/_authenticated/app/screener': typeof AuthenticatedAppScreenerRoute
+  '/_authenticated/app/sectors': typeof AuthenticatedAppSectorsRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/chart' | '/app'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/chart'
+    | '/app'
+    | '/app/breadth'
+    | '/app/calendar'
+    | '/app/fii-dii'
+    | '/app/heatmap'
+    | '/app/news'
+    | '/app/options'
+    | '/app/scanner'
+    | '/app/screener'
+    | '/app/sectors'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/chart' | '/app'
+  to:
+    | '/'
+    | '/auth'
+    | '/chart'
+    | '/app/breadth'
+    | '/app/calendar'
+    | '/app/fii-dii'
+    | '/app/heatmap'
+    | '/app/news'
+    | '/app/options'
+    | '/app/scanner'
+    | '/app/screener'
+    | '/app/sectors'
+    | '/app'
   id:
     | '__root__'
     | '/'
@@ -72,6 +190,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/chart'
     | '/_authenticated/app'
+    | '/_authenticated/app/breadth'
+    | '/_authenticated/app/calendar'
+    | '/_authenticated/app/fii-dii'
+    | '/_authenticated/app/heatmap'
+    | '/_authenticated/app/news'
+    | '/_authenticated/app/options'
+    | '/_authenticated/app/scanner'
+    | '/_authenticated/app/screener'
+    | '/_authenticated/app/sectors'
+    | '/_authenticated/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +246,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/sectors': {
+      id: '/_authenticated/app/sectors'
+      path: '/sectors'
+      fullPath: '/app/sectors'
+      preLoaderRoute: typeof AuthenticatedAppSectorsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/screener': {
+      id: '/_authenticated/app/screener'
+      path: '/screener'
+      fullPath: '/app/screener'
+      preLoaderRoute: typeof AuthenticatedAppScreenerRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/scanner': {
+      id: '/_authenticated/app/scanner'
+      path: '/scanner'
+      fullPath: '/app/scanner'
+      preLoaderRoute: typeof AuthenticatedAppScannerRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/options': {
+      id: '/_authenticated/app/options'
+      path: '/options'
+      fullPath: '/app/options'
+      preLoaderRoute: typeof AuthenticatedAppOptionsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/news': {
+      id: '/_authenticated/app/news'
+      path: '/news'
+      fullPath: '/app/news'
+      preLoaderRoute: typeof AuthenticatedAppNewsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/heatmap': {
+      id: '/_authenticated/app/heatmap'
+      path: '/heatmap'
+      fullPath: '/app/heatmap'
+      preLoaderRoute: typeof AuthenticatedAppHeatmapRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/fii-dii': {
+      id: '/_authenticated/app/fii-dii'
+      path: '/fii-dii'
+      fullPath: '/app/fii-dii'
+      preLoaderRoute: typeof AuthenticatedAppFiiDiiRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/calendar': {
+      id: '/_authenticated/app/calendar'
+      path: '/calendar'
+      fullPath: '/app/calendar'
+      preLoaderRoute: typeof AuthenticatedAppCalendarRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
+    '/_authenticated/app/breadth': {
+      id: '/_authenticated/app/breadth'
+      path: '/breadth'
+      fullPath: '/app/breadth'
+      preLoaderRoute: typeof AuthenticatedAppBreadthRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteRouteChildren {
+  AuthenticatedAppBreadthRoute: typeof AuthenticatedAppBreadthRoute
+  AuthenticatedAppCalendarRoute: typeof AuthenticatedAppCalendarRoute
+  AuthenticatedAppFiiDiiRoute: typeof AuthenticatedAppFiiDiiRoute
+  AuthenticatedAppHeatmapRoute: typeof AuthenticatedAppHeatmapRoute
+  AuthenticatedAppNewsRoute: typeof AuthenticatedAppNewsRoute
+  AuthenticatedAppOptionsRoute: typeof AuthenticatedAppOptionsRoute
+  AuthenticatedAppScannerRoute: typeof AuthenticatedAppScannerRoute
+  AuthenticatedAppScreenerRoute: typeof AuthenticatedAppScreenerRoute
+  AuthenticatedAppSectorsRoute: typeof AuthenticatedAppSectorsRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
+  AuthenticatedAppBreadthRoute: AuthenticatedAppBreadthRoute,
+  AuthenticatedAppCalendarRoute: AuthenticatedAppCalendarRoute,
+  AuthenticatedAppFiiDiiRoute: AuthenticatedAppFiiDiiRoute,
+  AuthenticatedAppHeatmapRoute: AuthenticatedAppHeatmapRoute,
+  AuthenticatedAppNewsRoute: AuthenticatedAppNewsRoute,
+  AuthenticatedAppOptionsRoute: AuthenticatedAppOptionsRoute,
+  AuthenticatedAppScannerRoute: AuthenticatedAppScannerRoute,
+  AuthenticatedAppScreenerRoute: AuthenticatedAppScreenerRoute,
+  AuthenticatedAppSectorsRoute: AuthenticatedAppSectorsRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteRouteWithChildren =
+  AuthenticatedAppRouteRoute._addFileChildren(
+    AuthenticatedAppRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAppRouteRoute: typeof AuthenticatedAppRouteRoute
+  AuthenticatedAppRouteRoute: typeof AuthenticatedAppRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAppRouteRoute: AuthenticatedAppRouteRoute,
+  AuthenticatedAppRouteRoute: AuthenticatedAppRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
