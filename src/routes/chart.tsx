@@ -198,7 +198,7 @@ function SymbolPicker({ symbol, onChange }: { symbol: string; onChange: (s: stri
             className="w-full rounded-xl border border-white/5 bg-background/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-emerald/40 focus:outline-none"
           />
           <div className="mt-2 max-h-64 overflow-y-auto">
-            {items.map((s) => (
+            {items.map((s: { symbol: string; name: string; exchange: string }) => (
               <button
                 key={s.symbol}
                 onClick={() => { onChange(s.symbol); setOpen(false); setQuery(""); }}
