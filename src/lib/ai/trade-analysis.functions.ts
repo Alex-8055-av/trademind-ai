@@ -118,6 +118,7 @@ Rules:
 - Include a clear educational disclaimer.`;
 
 export const analyzeSymbol = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => AnalyzeInput.parse(input))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
@@ -156,6 +157,7 @@ const ChatInput = z.object({
 });
 
 export const chatWithCopilot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => ChatInput.parse(input))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
@@ -189,6 +191,7 @@ const ImageInput = z.object({
 });
 
 export const analyzeChartImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => ImageInput.parse(input))
   .handler(async ({ data }) => {
     const key = process.env.LOVABLE_API_KEY;
