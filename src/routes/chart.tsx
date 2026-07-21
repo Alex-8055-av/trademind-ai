@@ -30,7 +30,7 @@ const CandlesInput = z.object({
 const fetchCandles = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => CandlesInput.parse(input))
   .handler(async ({ data }) => {
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     const candles = await provider.getCandles(data.symbol, data.timeframe, 300);
     return { candles, provider: provider.name };
   });
@@ -38,7 +38,7 @@ const fetchCandles = createServerFn({ method: "POST" })
 const searchSymbolsFn = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ query: z.string().max(40) }).parse(input))
   .handler(async ({ data }) => {
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     return { results: await provider.searchSymbols(data.query) };
   });
 
@@ -198,7 +198,7 @@ function SymbolPicker({ symbol, onChange }: { symbol: string; onChange: (s: stri
             className="w-full rounded-xl border border-white/5 bg-background/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-emerald/40 focus:outline-none"
           />
           <div className="mt-2 max-h-64 overflow-y-auto">
-            {items.map((s) => (
+            {items.map((s: { symbol: string; name: string; exchange: string }) => (
               <button
                 key={s.symbol}
                 onClick={() => { onChange(s.symbol); setOpen(false); setQuery(""); }}

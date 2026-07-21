@@ -124,7 +124,7 @@ export const analyzeSymbol = createServerFn({ method: "POST" })
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     const candles = await provider.getCandles(data.symbol, data.timeframe, 300);
     const snapshot = buildSnapshot(data.symbol, data.timeframe, candles);
 
@@ -163,7 +163,7 @@ export const chatWithCopilot = createServerFn({ method: "POST" })
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     let contextBlock = "No active chart symbol.";
     if (data.symbol && data.timeframe) {
       const candles = await provider.getCandles(data.symbol, data.timeframe, 200);

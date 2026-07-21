@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_logs: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_reports: {
         Row: {
           created_at: string
@@ -38,6 +65,51 @@ export type Database = {
           symbol?: string
           timeframe?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      ai_usage_log: {
+        Row: {
+          completion_tokens: number | null
+          cost_estimate_cents: number | null
+          created_at: string
+          error_message: string | null
+          feature: string
+          id: string
+          latency_ms: number | null
+          model: string
+          prompt_tokens: number | null
+          provider: string
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          completion_tokens?: number | null
+          cost_estimate_cents?: number | null
+          created_at?: string
+          error_message?: string | null
+          feature: string
+          id?: string
+          latency_ms?: number | null
+          model: string
+          prompt_tokens?: number | null
+          provider: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          completion_tokens?: number | null
+          cost_estimate_cents?: number | null
+          created_at?: string
+          error_message?: string | null
+          feature?: string
+          id?: string
+          latency_ms?: number | null
+          model?: string
+          prompt_tokens?: number | null
+          provider?: string
+          success?: boolean
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -71,6 +143,150 @@ export type Database = {
           symbol?: string
           triggered_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      announcements: {
+        Row: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          plan_scope: string
+          published_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_scope?: string
+          published_at?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          plan_scope?: string
+          published_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          ip: string | null
+          metadata: Json
+          resource_id: string | null
+          resource_type: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          resource_id?: string | null
+          resource_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          resource_id?: string | null
+          resource_type?: string | null
+        }
+        Relationships: []
+      }
+      coupons: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          discount_cents: number | null
+          discount_pct: number | null
+          id: string
+          max_redemptions: number | null
+          plan_scope: string | null
+          redeemed_count: number
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          discount_cents?: number | null
+          discount_pct?: number | null
+          id?: string
+          max_redemptions?: number | null
+          plan_scope?: string | null
+          redeemed_count?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          discount_cents?: number | null
+          discount_pct?: number | null
+          id?: string
+          max_redemptions?: number | null
+          plan_scope?: string | null
+          redeemed_count?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      feature_flags: {
+        Row: {
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          key: string
+          plan_min: string
+          rollout_pct: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key: string
+          plan_min?: string
+          rollout_pct?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key?: string
+          plan_min?: string
+          rollout_pct?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -111,6 +327,226 @@ export type Database = {
             columns: ["portfolio_id"]
             isOneToOne: false
             referencedRelation: "portfolios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          invoice_url: string | null
+          issued_at: string
+          paid_at: string | null
+          provider: string | null
+          provider_invoice_id: string | null
+          status: string
+          subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          invoice_url?: string | null
+          issued_at?: string
+          paid_at?: string | null
+          provider?: string | null
+          provider_invoice_id?: string | null
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          invoice_url?: string | null
+          issued_at?: string
+          paid_at?: string | null
+          provider?: string | null
+          provider_invoice_id?: string | null
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      market_cache: {
+        Row: {
+          expires_at: string
+          fetched_at: string
+          id: string
+          kind: string
+          payload: Json
+          provider: string
+          symbol: string
+          timeframe: string
+        }
+        Insert: {
+          expires_at: string
+          fetched_at?: string
+          id?: string
+          kind?: string
+          payload: Json
+          provider: string
+          symbol: string
+          timeframe: string
+        }
+        Update: {
+          expires_at?: string
+          fetched_at?: string
+          id?: string
+          kind?: string
+          payload?: Json
+          provider?: string
+          symbol?: string
+          timeframe?: string
+        }
+        Relationships: []
+      }
+      news_items: {
+        Row: {
+          ai_summary: string | null
+          bearish_score: number | null
+          bullish_score: number | null
+          created_at: string
+          headline: string
+          id: string
+          neutral_score: number | null
+          published_at: string
+          raw: Json | null
+          sentiment_score: number | null
+          source: string
+          symbol: string | null
+          url: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          bearish_score?: number | null
+          bullish_score?: number | null
+          created_at?: string
+          headline: string
+          id?: string
+          neutral_score?: number | null
+          published_at?: string
+          raw?: Json | null
+          sentiment_score?: number | null
+          source: string
+          symbol?: string | null
+          url?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          bearish_score?: number | null
+          bullish_score?: number | null
+          created_at?: string
+          headline?: string
+          id?: string
+          neutral_score?: number | null
+          published_at?: string
+          raw?: Json | null
+          sentiment_score?: number | null
+          source?: string
+          symbol?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          invoice_id: string | null
+          method: string | null
+          provider: string | null
+          provider_payment_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          invoice_id?: string | null
+          method?: string | null
+          provider?: string | null
+          provider_payment_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          invoice_id?: string | null
+          method?: string | null
+          provider?: string | null
+          provider_payment_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
         ]
@@ -166,6 +602,128 @@ export type Database = {
           id?: string
           plan?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at: string | null
+          canceled_at: string | null
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          metadata: Json
+          plan: string
+          provider: string | null
+          provider_customer_id: string | null
+          provider_subscription_id: string | null
+          status: string
+          trial_ends_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at?: string | null
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          metadata?: Json
+          plan?: string
+          provider?: string | null
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at?: string | null
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          metadata?: Json
+          plan?: string
+          provider?: string | null
+          provider_customer_id?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_messages: {
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          id: string
+          is_staff: boolean
+          ticket_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          is_staff?: boolean
+          ticket_id: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          is_staff?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          priority: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          priority?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -347,6 +905,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_plan: { Args: { _user_id: string }; Returns: string }
+      has_min_plan: {
+        Args: { _min_plan: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -354,6 +917,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      plan_rank: { Args: { _plan: string }; Returns: number }
     }
     Enums: {
       alert_kind:
