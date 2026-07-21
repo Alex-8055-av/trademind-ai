@@ -30,7 +30,7 @@ const CandlesInput = z.object({
 const fetchCandles = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => CandlesInput.parse(input))
   .handler(async ({ data }) => {
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     const candles = await provider.getCandles(data.symbol, data.timeframe, 300);
     return { candles, provider: provider.name };
   });
@@ -38,7 +38,7 @@ const fetchCandles = createServerFn({ method: "POST" })
 const searchSymbolsFn = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ query: z.string().max(40) }).parse(input))
   .handler(async ({ data }) => {
-    const provider = getMarketDataProvider();
+    const provider = await getMarketDataProvider();
     return { results: await provider.searchSymbols(data.query) };
   });
 
