@@ -81,11 +81,52 @@ function PortfolioPage() {
     return acc;
   }, {});
 
+  const runReview = async () => {
+    if (activeHoldings.length === 0) return toast.error("Add holdings first");
+    setReviewing(true); setReview(null);
+    try {
+      const res = await reviewFn({ data: {
+        holdings: activeHoldings.map((h) => ({ symbol: h.symbol, qty: h.qty, avg_price: h.avg_price, current_price: currentPrice(h.symbol), sector: h.sector })),
+      } });
+      setReview(res.review);
+    } catch (e: any) { toast.error(e?.message || "AI review failed"); }
+    setReviewing(false);
+  };
+
   return (
     <div>
       <PageHeader title="Portfolio" subtitle="Track your holdings, P&L, allocation, and portfolio risk." actions={
-        <button onClick={createPortfolio} className="text-xs bg-emerald text-primary-foreground px-3 py-1.5 rounded-full font-semibold">+ New portfolio</button>
+        <div className="flex gap-2">
+          <button onClick={runReview} disabled={reviewing || activeHoldings.length === 0} className="text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-foreground px-3 py-1.5 rounded-full font-semibold inline-flex items-center gap-1 disabled:opacity-50"><Sparkles className="h-3 w-3" /> {reviewing ? "Reviewing…" : "AI Review"}</button>
+          <button onClick={createPortfolio} className="text-xs bg-emerald text-primary-foreground px-3 py-1.5 rounded-full font-semibold">+ New portfolio</button>
+        </div>
       } />
+
+      {review && (
+        <Panel className="mb-4">
+          <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-emerald" /><h3 className="text-sm font-semibold">AI Portfolio Manager</h3></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+            <Stat label="Diversification" value={`${review.diversificationScore}/100`} />
+            <Stat label="Risk Score" value={`${review.riskScore}/100`} />
+            <Stat label="Concentration" value={review.concentrationRisk} />
+            <Stat label="Suggestions" value={String(review.topPositionSuggestions.length)} />
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">{review.sectorExposureSummary}</p>
+          <div className="grid md:grid-cols-2 gap-3">
+            <div>
+              <div className="text-xs font-semibold mb-2">Position suggestions</div>
+              <ul className="text-xs space-y-2">{review.topPositionSuggestions.map((s, i) => (<li key={i}><span className="text-emerald font-medium">{s.symbol}</span> — <span className="uppercase">{s.action}</span>: <span className="text-muted-foreground">{s.rationale}</span></li>))}</ul>
+            </div>
+            <div>
+              <div className="text-xs font-semibold mb-2">Rebalancing</div>
+              <ul className="text-xs space-y-1 text-muted-foreground list-disc list-inside">{review.rebalancingSuggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
+            </div>
+          </div>
+          <p className="text-xs mt-3 text-foreground">{review.longTermInsights}</p>
+          <p className="text-[10px] text-muted-foreground mt-2 italic">{review.disclaimer}</p>
+        </Panel>
+      )}
+
 
       {portfolios.length === 0 ? (
         <Panel>
