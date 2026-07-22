@@ -57,7 +57,7 @@ function BacktestPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) await supabase.from("backtests").insert({
         user_id: user.id, strategy_id: strat.id, symbol, timeframe,
-        params, metrics: res.metrics, equity_curve: res.equityCurve, trades: res.trades,
+        params: params as any, metrics: res.metrics as any, equity_curve: res.equityCurve as any, trades: res.trades as any,
       });
     } catch (e: any) {
       toast.error(e?.message || "Backtest failed");
