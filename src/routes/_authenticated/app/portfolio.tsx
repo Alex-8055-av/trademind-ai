@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { PageHeader, Panel, Stat, pctClass } from "@/components/app/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { UNIVERSE } from "@/lib/services/mock";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { reviewPortfolio, type PortfolioReview } from "@/lib/ai/portfolio-review.functions";
 
 export const Route = createFileRoute("/_authenticated/app/portfolio")({
   head: () => ({ meta: [{ title: "Portfolio — TradeMind AI" }] }),
