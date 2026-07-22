@@ -44,6 +44,9 @@ const groups = [
     label: "Workspace",
     items: [
       { title: "Portfolio", to: "/app/portfolio", icon: Wallet },
+      { title: "Paper Trading", to: "/app/paper", icon: CandlestickChart },
+      { title: "Strategies", to: "/app/strategies", icon: Boxes },
+      { title: "Backtest", to: "/app/backtest", icon: Activity },
       { title: "Watchlist", to: "/app/watchlist", icon: Star },
       { title: "Alerts", to: "/app/alerts", icon: BellRing },
       { title: "Trade Journal", to: "/app/journal", icon: BookOpen },
