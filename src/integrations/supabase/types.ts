@@ -215,6 +215,53 @@ export type Database = {
         }
         Relationships: []
       }
+      backtests: {
+        Row: {
+          created_at: string
+          equity_curve: Json
+          id: string
+          metrics: Json
+          params: Json
+          strategy_id: string | null
+          symbol: string
+          timeframe: string
+          trades: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          equity_curve?: Json
+          id?: string
+          metrics?: Json
+          params?: Json
+          strategy_id?: string | null
+          symbol: string
+          timeframe?: string
+          trades?: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          equity_curve?: Json
+          id?: string
+          metrics?: Json
+          params?: Json
+          strategy_id?: string | null
+          symbol?: string
+          timeframe?: string
+          trades?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "backtests_strategy_id_fkey"
+            columns: ["strategy_id"]
+            isOneToOne: false
+            referencedRelation: "strategies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coupons: {
         Row: {
           active: boolean
@@ -501,6 +548,133 @@ export type Database = {
         }
         Relationships: []
       }
+      paper_accounts: {
+        Row: {
+          cash: number
+          created_at: string
+          currency: string
+          id: string
+          name: string
+          starting_balance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cash?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          name?: string
+          starting_balance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cash?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          name?: string
+          starting_balance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      paper_orders: {
+        Row: {
+          account_id: string
+          created_at: string
+          filled_at: string | null
+          filled_price: number | null
+          id: string
+          limit_price: number | null
+          order_type: string
+          pnl: number | null
+          qty: number
+          side: string
+          status: string
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          filled_at?: string | null
+          filled_price?: number | null
+          id?: string
+          limit_price?: number | null
+          order_type?: string
+          pnl?: number | null
+          qty: number
+          side: string
+          status?: string
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          filled_at?: string | null
+          filled_price?: number | null
+          id?: string
+          limit_price?: number | null
+          order_type?: string
+          pnl?: number | null
+          qty?: number
+          side?: string
+          status?: string
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paper_orders_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "paper_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      paper_positions: {
+        Row: {
+          account_id: string
+          avg_price: number
+          id: string
+          qty: number
+          symbol: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          avg_price: number
+          id?: string
+          qty: number
+          symbol: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          avg_price?: number
+          id?: string
+          qty?: number
+          symbol?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "paper_positions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "paper_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount_cents: number
@@ -602,6 +776,39 @@ export type Database = {
           id?: string
           plan?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      strategies: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          name: string
+          rules: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name: string
+          rules?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name?: string
+          rules?: Json
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
