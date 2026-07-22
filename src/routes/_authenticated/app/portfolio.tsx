@@ -27,6 +27,9 @@ function PortfolioPage() {
   const [busy, setBusy] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState({ symbol: "RELIANCE", qty: 10, avg_price: 2800 });
+  const [review, setReview] = useState<PortfolioReview | null>(null);
+  const [reviewing, setReviewing] = useState(false);
+  const reviewFn = useServerFn(reviewPortfolio);
 
   const load = async () => {
     const { data: pfs } = await supabase.from("portfolios").select("*").order("created_at");
