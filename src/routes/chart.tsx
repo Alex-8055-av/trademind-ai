@@ -14,6 +14,8 @@ import { PriceChart } from "@/components/chart/PriceChart";
 import { analyzeSymbol, type TradeReport } from "@/lib/ai/trade-analysis.functions";
 import { getMarketDataProvider } from "@/lib/market-data";
 import type { Timeframe } from "@/lib/market-data/types";
+import { useLiveQuote } from "@/hooks/use-live-quotes";
+
 
 
 const TIMEFRAMES: Timeframe[] = [
@@ -67,16 +69,24 @@ function ChartPage() {
   const candlesQuery = useQuery({
     queryKey: ["candles", symbol, timeframe],
     queryFn: () => candlesFn({ data: { symbol, timeframe } }),
-    staleTime: 30_000,
+    staleTime: 4_000,
+    refetchInterval: 5_000,
+    refetchIntervalInBackground: false,
   });
+
+  const { quote: liveQuote } = useLiveQuote(symbol, 3_000);
 
   useEffect(() => { setReport(null); }, [symbol, timeframe]);
 
   const candles = candlesQuery.data?.candles ?? [];
-  const last = candles[candles.length - 1];
   const first = candles[0];
-  const changePct = last && first ? ((last.close - first.close) / first.close) * 100 : 0;
+  const lastCandle = candles[candles.length - 1];
+  const livePrice = liveQuote?.price ?? lastCandle?.close;
+  const changePct = liveQuote
+    ? liveQuote.changePct
+    : lastCandle && first ? ((lastCandle.close - first.close) / first.close) * 100 : 0;
   const up = changePct >= 0;
+
 
   async function onAnalyze() {
     setAnalyzing(true);
@@ -114,15 +124,17 @@ function ChartPage() {
             </div>
 
             <div className="ml-auto flex items-center gap-3">
-              {last && (
+              {livePrice !== undefined && (
                 <div className="text-right">
-                  <p className="font-display text-lg font-semibold text-foreground">{last.close.toFixed(2)}</p>
+                  <p className="font-display text-lg font-semibold text-foreground">{livePrice.toFixed(2)}</p>
                   <p className={`inline-flex items-center gap-1 text-xs font-medium ${up ? "text-emerald" : "text-trading-red"}`}>
                     {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                     {changePct.toFixed(2)}%
+                    {liveQuote && <span className="ml-1 h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" aria-label="live" />}
                   </p>
                 </div>
               )}
+
               <button
                 onClick={onAnalyze}
                 disabled={analyzing || candlesQuery.isLoading}
