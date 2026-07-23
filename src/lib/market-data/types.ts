@@ -54,12 +54,14 @@ export interface MarketDataProvider {
   searchSymbols(query: string): Promise<SymbolInfo[]>;
   getCandles(symbol: string, timeframe: Timeframe, limit?: number): Promise<Candle[]>;
   getQuote?(symbol: string): Promise<Quote>;
+  getQuotes?(symbols: string[]): Promise<Record<string, Quote>>;
   getDepth?(symbol: string): Promise<Depth>;
   getIndex?(symbol: string): Promise<IndexData>;
   getCompany?(symbol: string): Promise<CompanyInfo>;
   /** Optional: server-side subscription for live quotes. Returns an unsubscribe fn. */
   subscribeQuotes?(symbols: string[], cb: (q: Quote) => void): () => void;
 }
+
 
 export class ProviderKeyMissing extends Error {
   constructor(public provider: string, public envVar: string) {

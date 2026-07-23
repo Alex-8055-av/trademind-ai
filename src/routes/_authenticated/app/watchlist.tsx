@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader, Panel, pctClass } from "@/components/app/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { UNIVERSE } from "@/lib/services/mock";
+import { useLiveQuotes } from "@/hooks/use-live-quotes";
 import { Plus, Trash2, Pin, PinOff } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/_authenticated/app/watchlist")({
   head: () => ({ meta: [{ title: "Watchlist — TradeMind AI" }] }),
@@ -61,6 +63,9 @@ function WatchlistPage() {
   };
 
   const activeItems = items.filter((i) => i.watchlist_id === active);
+  const activeSymbols = useMemo(() => activeItems.map((i) => i.symbol), [activeItems]);
+  const { quotes } = useLiveQuotes(activeSymbols, 5000);
+
 
   return (
     <div>
@@ -97,18 +102,24 @@ function WatchlistPage() {
               <tbody>
                 {activeItems.map((i) => {
                   const u = UNIVERSE.find((x) => x.symbol === i.symbol);
-                  const chg = (i.symbol.charCodeAt(0) % 12) - 6;
+                  const q = quotes[i.symbol];
+                  const price = q?.price ?? u?.price;
+                  const chg = q?.changePct ?? ((i.symbol.charCodeAt(0) % 12) - 6);
                   return (
                     <tr key={i.id} className="border-t border-white/5">
-                      <td className="p-2 font-medium">{i.symbol}</td>
+                      <td className="p-2 font-medium">
+                        {i.symbol}
+                        {q && <span className="ml-2 inline-block h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" aria-label="live" />}
+                      </td>
                       <td className="p-2 text-muted-foreground">{u?.sector ?? "—"}</td>
-                      <td className="p-2 text-right">₹{u?.price ?? "—"}</td>
-                      <td className={`p-2 text-right ${pctClass(chg)}`}>{chg > 0 ? "+" : ""}{chg}%</td>
+                      <td className="p-2 text-right">{price !== undefined ? price.toFixed(2) : "—"}</td>
+                      <td className={`p-2 text-right ${pctClass(chg)}`}>{chg > 0 ? "+" : ""}{chg.toFixed(2)}%</td>
                       <td className="p-2 text-right"><span className="bg-emerald/10 text-emerald px-2 py-0.5 rounded-full text-xs">{i.ai_score ?? "—"}</span></td>
                       <td className="p-2 text-right"><button onClick={() => remove(i.id)} className="text-muted-foreground hover:text-red-400"><Trash2 className="h-3.5 w-3.5" /></button></td>
                     </tr>
                   );
                 })}
+
                 {activeItems.length === 0 && <tr><td colSpan={6} className="p-4 text-center text-muted-foreground text-sm">Empty — add symbols</td></tr>}
               </tbody>
             </table>
