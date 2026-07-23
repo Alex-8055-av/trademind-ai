@@ -1,6 +1,7 @@
-import type { Candle, MarketDataProvider, SymbolInfo, Timeframe } from "../types";
+import type { Candle, MarketDataProvider, Quote, SymbolInfo, Timeframe } from "../types";
 import { ProviderKeyMissing } from "../types";
 import { getRateLimiter, withRetry } from "../rate-limit";
+
 
 const TF_MAP: Partial<Record<Timeframe, string>> = {
   "1m": "1min", "5m": "5min", "15m": "15min", "30m": "30min",
@@ -39,4 +40,57 @@ export class TwelveDataAdapter implements MarketDataProvider {
       }));
     });
   }
+
+  async getQuote(symbol: string): Promise<Quote> {
+    const map = await this.getQuotes([symbol]);
+    const q = map[symbol];
+    if (!q) throw new Error(`TwelveData: no quote for ${symbol}`);
+    return q;
+  }
+
+  /**
+   * Batch quote endpoint — TwelveData accepts up to ~120 symbols per call.
+   * Response is either a single object (one symbol) or a keyed map.
+   */
+  async getQuotes(symbols: string[]): Promise<Record<string, Quote>> {
+    if (symbols.length === 0) return {};
+    await this.limiter.acquire();
+    const url = `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbols.join(","))}&apikey=${this.apiKey}`;
+    return withRetry(async () => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`TwelveData quotes ${res.status}`);
+      const j = (await res.json()) as Record<string, unknown> | { symbol?: string };
+      const out: Record<string, Quote> = {};
+      const toQuote = (row: Record<string, unknown>, fallbackSym: string): Quote | null => {
+        const price = Number(row.close ?? row.price);
+        if (!Number.isFinite(price)) return null;
+        const change = Number(row.change ?? 0);
+        const changePct = Number(row.percent_change ?? 0);
+        const volume = Number(row.volume ?? 0);
+        const ts = Number(row.timestamp ?? Math.floor(Date.now() / 1000));
+        return {
+          symbol: String(row.symbol ?? fallbackSym),
+          price,
+          change: Number.isFinite(change) ? change : 0,
+          changePct: Number.isFinite(changePct) ? changePct : 0,
+          volume: Number.isFinite(volume) ? volume : 0,
+          timestamp: ts,
+        };
+      };
+      if (symbols.length === 1) {
+        const q = toQuote(j as Record<string, unknown>, symbols[0]);
+        if (q) out[symbols[0]] = q;
+        return out;
+      }
+      for (const sym of symbols) {
+        const row = (j as Record<string, unknown>)[sym];
+        if (row && typeof row === "object") {
+          const q = toQuote(row as Record<string, unknown>, sym);
+          if (q) out[sym] = q;
+        }
+      }
+      return out;
+    });
+  }
 }
+

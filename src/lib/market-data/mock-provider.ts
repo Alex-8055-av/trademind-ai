@@ -1,4 +1,4 @@
-import type { Candle, MarketDataProvider, SymbolInfo, Timeframe } from "./types";
+import type { Candle, MarketDataProvider, Quote, SymbolInfo, Timeframe } from "./types";
 
 const CATALOG: SymbolInfo[] = [
   { symbol: "RELIANCE", name: "Reliance Industries", exchange: "NSE" },
@@ -84,4 +84,29 @@ export class MockMarketDataProvider implements MarketDataProvider {
     }
     return candles;
   }
+
+  async getQuote(symbol: string): Promise<Quote> {
+    // Live-ish: adds a tiny time-dependent jitter so polling shows movement.
+    const candles = await this.getCandles(symbol, "1m", 2);
+    const last = candles[candles.length - 1];
+    const prev = candles[candles.length - 2] ?? last;
+    const jitter = ((Date.now() / 1000) % 60) / 60 - 0.5;
+    const price = last.close * (1 + jitter * 0.0008);
+    const change = price - prev.close;
+    return {
+      symbol,
+      price,
+      change,
+      changePct: prev.close ? (change / prev.close) * 100 : 0,
+      volume: last.volume,
+      timestamp: Math.floor(Date.now() / 1000),
+    };
+  }
+
+  async getQuotes(symbols: string[]): Promise<Record<string, Quote>> {
+    const out: Record<string, Quote> = {};
+    await Promise.all(symbols.map(async (s) => { out[s] = await this.getQuote(s); }));
+    return out;
+  }
 }
+
