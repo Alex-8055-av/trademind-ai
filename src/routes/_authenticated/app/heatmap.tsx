@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { PageHeader, Panel } from "@/components/app/PageHeader";
 import { getHeatmap } from "@/lib/services/mock";
+import { useLiveQuotes } from "@/hooks/use-live-quotes";
+
 
 export const Route = createFileRoute("/_authenticated/app/heatmap")({
   head: () => ({ meta: [{ title: "Market Heatmap — TradeMind AI" }] }),
@@ -27,6 +29,9 @@ function HeatmapPage() {
   const [kind, setKind] = useState<Kind>("nifty");
   const tiles = useMemo(() => getHeatmap(kind), [kind]);
   const total = tiles.reduce((s, t) => s + t.cap, 0);
+  const symbols = useMemo(() => tiles.slice(0, 40).map((t) => t.symbol), [tiles]);
+  const { quotes } = useLiveQuotes(symbols, 10_000);
+
 
   return (
     <div>
@@ -41,14 +46,17 @@ function HeatmapPage() {
       <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1.5">
         {tiles.map((t) => {
           const weight = Math.max(1, Math.round((t.cap / total) * 20));
+          const live = quotes[t.symbol]?.changePct;
+          const chg = live ?? t.changePct;
           return (
-            <div key={t.symbol} style={{ backgroundColor: tileColor(t.changePct), gridColumn: `span ${Math.min(3, weight)}` }} className="rounded-lg p-3 text-white text-xs">
+            <div key={t.symbol} style={{ backgroundColor: tileColor(chg), gridColumn: `span ${Math.min(3, weight)}` }} className="rounded-lg p-3 text-white text-xs">
               <div className="font-semibold truncate">{t.symbol}</div>
               <div className="opacity-80 text-[10px] truncate">{t.name}</div>
-              <div className="mt-1 font-semibold">{t.changePct > 0 ? "+" : ""}{t.changePct}%</div>
+              <div className="mt-1 font-semibold">{chg > 0 ? "+" : ""}{chg.toFixed(2)}%</div>
             </div>
           );
         })}
+
       </div>
     </div>
   );
